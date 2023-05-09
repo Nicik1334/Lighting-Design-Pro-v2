@@ -1,0 +1,39 @@
+.tags_wrapper {
+  :global {
+    .ant-tabs-nav {
+      // margin-bottom: 0px;
+    }
+
+    .ant-tabs-tab-remove {
+      z-index: 10;
+      display: flex;
+    }
+  }
+}
+
+.drop_down_span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.tabs_full {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden auto;
+
+  :global {
+    .ant-tabs-nav {
+      height: 0 !important;
+      overflow: hidden;
+    }
+  }
+}
