@@ -6,18 +6,9 @@ import { ConfigProvider } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Icon from '@ant-design/icons';
 import * as antIcons from '@ant-design/icons';
-import {
-  Link,
-  history,
-  useModel,
-  useAppData,
-  useLocation,
-  Navigate,
-  useNavigate,
-  Outlet,
-} from '@umijs/max';
+import { Link, useModel, useAppData, useLocation, useNavigate, Outlet } from '@umijs/max';
 import GlobalConfig from '@/global';
-import { HOME_PATH, LOGIN_PATH, TABS_LIST, USER_TOKEN } from '@/constants';
+import { HOME_PATH, TABS_LIST } from '@/constants';
 import NProgress from '@/components/common/NProgress';
 import BaseTabs from '../BaseTabs';
 import { TagsItemType } from '../BaseTabs/TabsMenu/data';
@@ -65,11 +56,6 @@ const BasicLayout: React.FC<ProLayoutProps> = () => {
       setPathname(HOME_PATH);
     }
   }, [location.pathname]);
-
-  // console.log(initialState?.settings?.tabView);
-
-  // 路径为"/",则重定向到首页
-  // if (location.pathname === '/') return <Navigate to={HOME_PATH} />;
 
   const loopMenuItem = (menus: MenuDataItem[] = []): MenuDataItem[] | [] =>
     menus.map(({ icon, children, ...item }) => {

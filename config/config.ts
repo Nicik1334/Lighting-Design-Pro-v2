@@ -8,7 +8,6 @@ import { theme } from 'antd';
 
 const { REACT_APP_ENV = 'dev' } = process.env;
 
-
 const { defaultAlgorithm, defaultSeed } = theme;
 const mapToken = defaultAlgorithm(defaultSeed);
 export default defineConfig({
@@ -24,7 +23,7 @@ export default defineConfig({
   ignoreMomentLocale: true,
   proxy: proxy[REACT_APP_ENV as keyof typeof proxy],
   fastRefresh: true,
-
+  dva: {},
   //============== 以下都是max的插件配置 ===============
   /**
    * @name 数据流插件

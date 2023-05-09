@@ -195,7 +195,9 @@ const BaseTabs: React.FC<BaseTabsProps> = memo(({ home }) => {
   const handleOnChange = (route: RouteContextType) => {
     const { menuData = [], currentMenu } = route;
     const { pathname } = location;
+
     const { path, redirectPath } = currentMenu as MenuDataItem;
+
     // (1)当前为登录页面则不进行初始化
     if (pathname === LOGIN_PATH) return;
     // (2)系统第一次初始化currentMenu默认为首页，判断currentMenu.path为首页且当前pathname不是首页则return

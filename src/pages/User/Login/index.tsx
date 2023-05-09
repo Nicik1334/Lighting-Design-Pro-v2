@@ -1,272 +1,240 @@
-import { login } from '@/services/ant-design-pro/api';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
   AlipayCircleOutlined,
   LockOutlined,
-  MobileOutlined,
   TaobaoCircleOutlined,
   UserOutlined,
   WeiboCircleOutlined,
 } from '@ant-design/icons';
+import { Alert, Checkbox, Col, Form, message, Row, Space, Tabs } from 'antd';
 import {
-  LoginForm,
-  ProFormCaptcha,
-  ProFormCheckbox,
-  ProFormText,
-} from '@ant-design/pro-components';
-import { useEmotionCss } from '@ant-design/use-emotion-css';
-import { history, useModel, Helmet } from '@umijs/max';
-import { Alert, message, Tabs } from 'antd';
-import Settings from '../../../../config/defaultSettings';
-import React, { useState } from 'react';
-import { flushSync } from 'react-dom';
+  LForm,
+  LFormItemCaptcha,
+  LFormItemInput,
+  LFormItemPassword,
+  LLoginForm,
+} from 'lighting-design';
+import type { CSSProperties } from 'react';
+import { useState } from 'react';
+import React from 'react';
+import style from './style.less';
+import loginBg from '@/assets/imgs/login/loginBg.png';
+import loginBoxBg from '@/assets/imgs/login/loginBoxBg.png';
+import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import { useModel, history } from '@umijs/max';
+import logo from '@/assets/icons/logo1.svg';
+import { useRequest } from 'ahooks';
+import { login } from '@/services/ant-design-pro/api';
+import { getPageQuery } from '@/utils';
+import { USER_TOKEN } from '@/constants';
+import { AUTHURL, ROUTES } from './mock';
 
-const ActionIcons = () => {
-  const langClassName = useEmotionCss(({ token }) => {
-    return {
-      marginLeft: '8px',
-      color: 'rgba(0, 0, 0, 0.2)',
-      fontSize: '24px',
-      verticalAlign: 'middle',
-      cursor: 'pointer',
-      transition: 'color 0.3s',
-      '&:hover': {
-        color: token.colorPrimaryActive,
-      },
-    };
-  });
-
-  return (
-    <>
-      <AlipayCircleOutlined key="AlipayCircleOutlined" className={langClassName} />
-      <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={langClassName} />
-      <WeiboCircleOutlined key="WeiboCircleOutlined" className={langClassName} />
-    </>
-  );
+const iconStyles: CSSProperties = {
+  marginInlineStart: '16px',
+  color: 'rgba(0, 0, 0, 0.2)',
+  fontSize: '24px',
+  verticalAlign: 'middle',
+  cursor: 'pointer',
 };
 
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({ content }) => {
-  return (
-    <Alert
-      style={{
-        marginBottom: 24,
-      }}
-      message={content}
-      type="error"
-      showIcon
-    />
-  );
-};
+export interface FormDataType {
+  username: string;
+  password: string;
+}
 
-const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+const Login = () => {
   const [type, setType] = useState<string>('account');
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  const { setInitialState } = useModel('@@initialState');
+  const [form] = Form.useForm();
 
-  const containerClassName = useEmotionCss(() => {
-    return {
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100vh',
-      overflow: 'auto',
-      backgroundImage:
-        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
-      backgroundSize: '100% 100%',
-    };
-  });
-
-  const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
-    if (userInfo) {
-      flushSync(() => {
+  const { loading, run: loginRun } = useRequest<HttpResult<any>, API.LoginParams[]>(login, {
+    manual: true,
+    onSuccess: (result) => {
+      if (result.success) {
+        const { data: d } = result;
+        sessionStorage.setItem(USER_TOKEN, d.token);
+        console.log(d);
         setInitialState((s) => ({
           ...s,
-          currentUser: userInfo,
+          currentUser: {
+            ...d,
+            authButton: new Set([]),
+            authUrl: new Set(AUTHURL),
+            routes: ROUTES,
+          },
         }));
-      });
-    }
-  };
-
-  const handleSubmit = async (values: API.LoginParams) => {
-    try {
-      // 登录
-      const msg = await login({ ...values, type });
-      if (msg.status === 'ok') {
-        const defaultLoginSuccessMessage = '登录成功！';
-        message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
-        return;
+        const params = getPageQuery();
+        const { redirect = '/' } = params as { redirect: string };
+        history.push(redirect);
+        setUserLoginState({
+          status: result.status,
+          type: d.type,
+        });
       }
-      console.log(msg);
-      // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
-    } catch (error) {
-      const defaultLoginFailureMessage = '登录失败，请重试！';
-      console.log(error);
-      message.error(defaultLoginFailureMessage);
-    }
-  };
+    },
+  });
+
   const { status, type: loginType } = userLoginState;
 
-  return (
-    <div className={containerClassName}>
-      <Helmet>
-        <title>登录页 - {Settings.title}</title>
-      </Helmet>
-      <div
-        style={{
-          flex: '1',
-          padding: '32px 0',
+  // 账号密码登录
+  const AccountDom = () => (
+    <LForm
+      name="LFormItemInput"
+      submitter={{
+        showReset: false,
+        submitButtonProps: {
+          block: true,
+        },
+        submitText: '登录',
+      }}
+      loading={loading}
+      onFinish={async (values) => {
+        loginRun({ ...values, type: 'account', autoLogin: true } as API.LoginParams);
+      }}
+    >
+      <LFormItemInput
+        name="username"
+        required
+        disabledWhiteSpace
+        placeholder="请输入用户名"
+        initialValue="admin"
+        inputProps={{
+          prefix: <UserOutlined />,
+          placeholder: 'admin',
         }}
-      >
-        <LoginForm
-          contentStyle={{
-            minWidth: 280,
-            maxWidth: '75vw',
-          }}
-          logo={<img alt="logo" src="/logo.svg" />}
-          title="Ant Design"
-          subTitle="Ant Design 是西湖区最具影响力的 Web 设计规范"
-          initialValues={{
-            autoLogin: true,
-          }}
-          actions={['其他登录方式', <ActionIcons key="icons" />]}
-          onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
-          }}
+      />
+      <LFormItemPassword
+        name="password"
+        required
+        initialValue="ant.design"
+        passwordProps={{
+          prefix: <LockOutlined />,
+          placeholder: 'ant.design',
+        }}
+      />
+    </LForm>
+  );
+
+  // 手机号登录
+  const PhoneDom = () => (
+    <LForm
+      name="LFormItemInput"
+      submitter={{
+        showReset: false,
+        submitButtonProps: {
+          block: true,
+        },
+        submitText: '登录',
+      }}
+      form={form}
+      loading={loading}
+      onFinish={(values) => {
+        loginRun({ ...values, type });
+      }}
+    >
+      <LFormItemInput
+        name="phone"
+        required
+        type="phone"
+        disabledWhiteSpace
+        placeholder="请输入手机号"
+        rules={[
+          {
+            required: true,
+            message: '手机号格式错误!',
+            pattern: /^(?:(?:\+|00)86)?1[3-9]\d{9}$/,
+            min: 11,
+          },
+        ]}
+      />
+      <LFormItemCaptcha
+        type="inline"
+        name="captcha"
+        required
+        second={60}
+        onGetCaptcha={async () => {
+          await form.validateFields(['phone']);
+          const phone = form.getFieldValue('phone');
+          return await getFakeCaptcha({
+            phone,
+          }).then(() => {
+            message.success('获取验证码成功！验证码为：1234');
+          });
+        }}
+        placeholder="请输入验证码"
+        cacheKey="LOGIN_FROM"
+      />
+    </LForm>
+  );
+  return (
+    <Row
+      className={style.container}
+      style={{
+        background: `url(${loginBg}) no-repeat`,
+      }}
+    >
+      <Col flex="1" className={style.login_col}>
+        <div className={style.login_intro}>
+          <h1>Lighting Admin</h1>
+          <div className={style.desc}>
+            Ligthing Admin 是一套企业级的高颜值、高性能的通用型后台前端解决方案，
+            致力于在设计规范和基础组件的基础上，进一步提升企业级后台产品设计研发过程中的『用户』和『设计者』的体验。
+            在力求提供开箱即用的开发体验下，还提供了完整的脚手架,
+            涉及用户管理，权限管理，通用组件，工具包，网络请求等各个方面,
+            为后台管理系统中常见的方案提供了最佳实践来减少学习和开发成本。
+          </div>
+          <div className={style.login_bg}>
+            <img src={loginBoxBg} alt="" />
+          </div>
+        </div>
+      </Col>
+      <Col style={{ minWidth: '36%' }} className={style.login_from_col}>
+        <LLoginForm
+          message={
+            !status &&
+            ((loginType === 'account' && (
+              <Alert message="登录异常，请重试！" showIcon closable type="error" />
+            )) ||
+              (loginType === 'mobile' && (
+                <Alert message="验证码错误！" showIcon closable type="error" />
+              )))
+          }
+          logo={logo}
+          title="Lighting Admin"
+          subTitle="Lighting Admin是基于Ant Design而开发的业务常用模板组件。"
+          actions={
+            <Space>
+              其他登录方式
+              <AlipayCircleOutlined style={iconStyles} />
+              <TaobaoCircleOutlined style={iconStyles} />
+              <WeiboCircleOutlined style={iconStyles} />
+            </Space>
+          }
+          style={{ background: '#ffffff' }}
         >
           <Tabs
-            activeKey={type}
-            onChange={setType}
             centered
+            onChange={(e) => setType(e)}
             items={[
               {
+                label: '账号密码登录',
                 key: 'account',
-                label: '账户密码登录',
+                children: <AccountDom />,
               },
               {
-                key: 'mobile',
                 label: '手机号登录',
+                key: 'mobile',
+                children: <PhoneDom />,
               },
             ]}
           />
-
-          {status === 'error' && loginType === 'account' && (
-            <LoginMessage content="账户或密码错误(admin/ant.design)" />
-          )}
-          {type === 'account' && (
-            <>
-              <ProFormText
-                name="username"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <UserOutlined />,
-                }}
-                initialValue="admin"
-                placeholder="用户名: admin or user"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入用户名!',
-                  },
-                ]}
-              />
-              <ProFormText.Password
-                name="password"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                placeholder="密码: ant.design"
-                initialValue="ant.design"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入密码！',
-                  },
-                ]}
-              />
-            </>
-          )}
-
-          {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
-          {type === 'mobile' && (
-            <>
-              <ProFormText
-                fieldProps={{
-                  size: 'large',
-                  prefix: <MobileOutlined />,
-                }}
-                name="mobile"
-                placeholder="手机号"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入手机号！',
-                  },
-                  {
-                    pattern: /^1\d{10}$/,
-                    message: '手机号格式错误！',
-                  },
-                ]}
-              />
-              <ProFormCaptcha
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                captchaProps={{
-                  size: 'large',
-                }}
-                placeholder="请输入验证码"
-                captchaTextRender={(timing, count) => {
-                  if (timing) {
-                    return `${count} 获取验证码`;
-                  }
-                  return '获取验证码';
-                }}
-                name="captcha"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入验证码！',
-                  },
-                ]}
-                onGetCaptcha={async (phone) => {
-                  const result = await getFakeCaptcha({
-                    phone,
-                  });
-                  if (!result) {
-                    return;
-                  }
-                  message.success('获取验证码成功！验证码为：1234');
-                }}
-              />
-            </>
-          )}
-          <div
-            style={{
-              marginBottom: 24,
-            }}
-          >
-            <ProFormCheckbox noStyle name="autoLogin">
-              自动登录
-            </ProFormCheckbox>
-            <a
-              style={{
-                float: 'right',
-              }}
-            >
-              忘记密码
-            </a>
+          <div style={{ margin: '12px 0 24px' }}>
+            <Checkbox defaultChecked>记住密码</Checkbox>
+            <a style={{ float: 'right' }}>忘记密码</a>
           </div>
-        </LoginForm>
-      </div>
-    </div>
+        </LLoginForm>
+      </Col>
+    </Row>
   );
 };
 

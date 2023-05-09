@@ -4,6 +4,7 @@ import _throttle from 'lodash/throttle';
 import _empty from 'lodash/isEmpty';
 import { history } from '@umijs/max';
 import { NOTIFICATION_TYPES } from '@/constants';
+import { parse, stringify } from 'querystring';
 
 const { confirm } = Modal;
 /**
@@ -91,6 +92,16 @@ function onToString(e: any) {
   return e.toString();
 }
 
+const getPageQuery = () => parse(window.location.href.split('?')[1]);
+
+const getQueryPath = (path = '', query = {}) => {
+  const search = stringify(query);
+  if (search.length) {
+    return `${path}?${search}`;
+  }
+  return path;
+};
+
 const getTimeDistance = (type: 'today' | 'week' | 'month') => {
   const now = new Date();
   const oneDay = 1000 * 60 * 60 * 24;
@@ -133,7 +144,6 @@ const getTimeDistance = (type: 'today' | 'week' | 'month') => {
   const year = now.getFullYear();
   return [moment(`${year}-01-01 00:00:00`), moment(`${year}-12-31 23:59:59`)];
 };
-
 
 /* eslint no-useless-escape:0 */
 const reg =
@@ -283,7 +293,7 @@ const onTreeNodes = (authList: MenuType[], type: 'Menu' | 'Button', newList: str
   authList.forEach((item) => {
     if (
       item.nodeData.menuUrl &&
-      (type === 'Button' ? item.nodeData.menuType === 2 : item.nodeData.menuType != 2)
+      (type === 'Button' ? item.nodeData.menuType === 2 : item.nodeData.menuType !== 2)
     ) {
       newList.push(item.nodeData.menuUrl);
     }
@@ -349,6 +359,8 @@ export {
   formartDate,
   dispatchEvent,
   getTimeDistance,
+  getPageQuery,
+  getQueryPath,
   showNotification,
   formatDate,
   getImgBase64Url,

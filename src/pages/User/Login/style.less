@@ -1,0 +1,48 @@
+.container {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  overflow: auto;
+}
+
+.login_col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .login_intro {
+    display: flex;
+    flex: 0 1 auto;
+    flex-direction: column;
+    width: 580px;
+
+    h1 {
+      color: @colorPrimary;
+      font-size: 40px;
+      text-align: center;
+    }
+
+    .desc {
+      padding: 15px 0 40px;
+      color: #717370;
+      line-height: 32px;
+      text-indent: 2em;
+    }
+
+    .login_bg {
+      img {
+        width: 580px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .login_col {
+    display: none !important;
+  }
+
+  .login_from_col {
+    width: 100%;
+  }
+}

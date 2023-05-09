@@ -17,9 +17,13 @@ const routes = [
     layout: false,
     routes: [
       {
-        name: 'login',
+        name: '登录',
         path: '/user/login',
-        component: './User/Login',
+        component: './user/Login',
+      },
+      {
+        path: '*',
+        component: './404',
       },
     ],
   },
@@ -28,29 +32,75 @@ const routes = [
     component: '../layouts/BaseLayout',
     routes: [
       {
-        path: '/',
-        redirect: '/dashboard',
-      },
-      {
-        path: '/dashboard',
         name: '首页',
         icon: 'CommentOutlined',
-        component: './Welcome',
+        path: '/dashboard',
+        component: './dashboard',
       },
       {
-        path: '/admin',
-        name: '管理页',
-        icon: 'CrownOutlined',
+        path: '/form',
+        icon: 'FormOutlined',
+        name: '表单页',
         routes: [
           {
-            path: '/admin',
-            redirect: '/admin/sub-page',
+            path: '/form',
+            redirect: '/form/basic-form',
           },
           {
-            path: '/admin/sub-page',
-            icon: 'TableOutlined',
-            name: '操作页',
-            component: './Admin',
+            name: '基础表单',
+            path: '/form/basic-form',
+            component: './form/basic-form',
+          },
+          {
+            name: '弹窗表单',
+            path: '/form/modal-form',
+            component: './form/modal-form',
+          },
+          {
+            name: '分步表单',
+            path: '/form/step-form',
+            component: './form/step-form',
+          },
+        ],
+      },
+      {
+        path: '/system',
+        icon: 'SettingOutlined',
+        name: '系统管理',
+        routes: [
+          {
+            path: '/system',
+            redirect: '/system/menu',
+          },
+          {
+            name: '菜单管理',
+            icon: 'MenuFoldOutlined',
+            path: '/system/menu',
+            component: './system/menu',
+          },
+          {
+            name: '字典管理',
+            icon: 'TagsOutlined',
+            path: '/system/dictionary',
+            component: './system/dictionary',
+          },
+          {
+            name: '人员管理',
+            icon: 'TeamOutlined',
+            path: '/system/user',
+            component: './system/user',
+          },
+          {
+            name: '角色管理',
+            icon: 'UserSwitchOutlined',
+            path: '/system/role',
+            component: './system/role',
+          },
+          {
+            name: '组织管理',
+            icon: 'BranchesOutlined',
+            path: '/system/org',
+            component: './system/org',
           },
         ],
       },
@@ -114,6 +164,10 @@ const routes = [
         name: '百度',
         icon: 'RedditOutlined',
         path: 'http://www.baidu.com',
+      },
+      {
+        path: '/',
+        redirect: '/dashboard',
       },
       {
         path: '*',
