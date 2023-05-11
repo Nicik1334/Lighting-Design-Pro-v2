@@ -1,6 +1,6 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
 import { getDvaApp, RequestConfig } from '@umijs/max';
-import { message, notification } from 'antd';
+import { message } from 'antd';
 import _ from 'lodash';
 import NProgress from './components/common/NProgress';
 import { CODE_MESSAGE, USER_TOKEN } from './constants';
@@ -43,7 +43,7 @@ export const errorConfig: RequestConfig = {
         ...headers,
         ticket: sessionStorage.getItem(USER_TOKEN) as string,
       };
-      config.url = url?.startsWith('/mock') || url?.startsWith('/xxx') ? url : `${url}`;
+      // config.url = url?.startsWith('/mock') || url?.startsWith('/xxx') ? url : `${url}`;
       return { ...config };
     },
   ],

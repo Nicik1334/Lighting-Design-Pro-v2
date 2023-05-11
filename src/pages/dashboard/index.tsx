@@ -1,5 +1,5 @@
 import { PageContainer, ProCard } from '@ant-design/pro-components';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import React, { useState, useContext } from 'react';
 import { LNumberRoll, LTypeit } from 'lighting-design';
 import styles from './index.less';
@@ -9,9 +9,9 @@ import { Button, Space, theme, Tooltip } from 'antd';
 import { history } from '@umijs/max';
 
 const Dashboard: React.FC = () => {
-  const [value, setValue] = useState<string>(moment(new Date()).format('yyyy-MM-DD HH:mm:ss'));
+  const [value, setValue] = useState<string>(dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'));
   useRafInterval(() => {
-    setValue(moment(new Date()).format('yyyy-MM-DD HH:mm:ss'));
+    setValue(dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'));
   }, 1000);
 
   const { handleRefreshPage, handleClosePage, handleCloseAll, handleCloseOther } =
@@ -24,14 +24,6 @@ const Dashboard: React.FC = () => {
       <ProCard
         style={{
           backgroundColor: token.colorBgContainer,
-          boxShadow: token.boxShadow,
-          borderRadius: '8px',
-          fontSize: '14px',
-          color: token.colorTextSecondary,
-          lineHeight: '22px',
-          padding: '16px 19px',
-          minWidth: '220px',
-          flex: 1,
         }}
       >
         <Space>

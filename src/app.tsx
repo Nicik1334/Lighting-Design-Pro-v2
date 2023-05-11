@@ -1,5 +1,7 @@
+import { LoadingOutlined, setTwoToneColor } from '@ant-design/icons';
 import { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
+import { Spin } from 'antd';
 import defaultSettings, { SettingsTypes } from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
@@ -38,6 +40,9 @@ export async function getInitialState(): Promise<{
     settings: defaultSettings as Partial<LayoutSettings>,
   };
 }
+
+Spin.setDefaultIndicator(<LoadingOutlined spin />); // 设置全局loading样式
+setTwoToneColor(defaultSettings.colorPrimary); // 设置全局twoTone图标颜色
 
 /**
  * @name request 配置，可以配置错误处理

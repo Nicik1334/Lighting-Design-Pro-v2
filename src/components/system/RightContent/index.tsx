@@ -4,7 +4,6 @@ import React from 'react';
 import { useState } from 'react';
 import { useModel } from '@umijs/max';
 import HeaderSearch from '../HeaderSearch';
-import HeaderDark from '../HeaderDark';
 import TimeRoll from '../../common/TimeRoll';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
@@ -16,20 +15,12 @@ const GlobalHeaderRight: React.FC = () => {
   if (!initialState || !initialState.settings) {
     return null;
   }
-
-  const { navTheme, layout } = initialState.settings;
-  let className = styles.right;
-
-  if ((navTheme === 'dark' && layout === 'top') || layout === 'mix') {
-    className = `${styles.right}  ${styles.dark}`;
-  }
-
   return (
-    <Space className={className}>
+    <Space className={styles.right}>
       <div className={`${styles.action} ${styles.hidden}`} style={{ fontFamily: 'initial' }}>
-        <TimeRoll format="yyyy-MM-DD HH:mm" />
+        <TimeRoll format="YYYY-MM-DD HH:mm" />
       </div>
-      <HeaderSearch className={`${styles.action} ${styles.fullscreen}  ${styles.hidden}`} />
+      <HeaderSearch className={`${styles.action} ${styles.fullscreen} ${styles.hidden}`} />
       <div
         className={`${styles.action} ${styles.hidden}`}
         style={{ fontFamily: 'inherit' }}
@@ -50,9 +41,6 @@ const GlobalHeaderRight: React.FC = () => {
         ) : (
           <ExpandOutlined style={{ fontSize: 16 }} />
         )}
-      </div>
-      <div className={`${styles.action} ${styles.search}`}>
-        <HeaderDark />
       </div>
       <Avatar menu />
     </Space>

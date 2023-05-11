@@ -130,7 +130,6 @@ const TabsMenu: React.FC<TabsMenuProps> = ({
 
   // console.log('_');
 
-
   return (
     <div
       className={`${styles.tags_wrapper} ${isFull ? styles.tabs_full : ''}`}

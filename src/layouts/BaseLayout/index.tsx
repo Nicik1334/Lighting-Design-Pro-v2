@@ -47,7 +47,7 @@ const BasicLayout: React.FC<ProLayoutProps> = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
   const location = useLocation();
   const navigate = useNavigate();
-  const route = useAppData().clientRoutes[useAppData().clientRoutes.length - 2].routes;
+  const route = useAppData().clientRoutes[useAppData().clientRoutes.length - 1].routes;
 
   useEffect(() => {
     if (location.pathname) {
@@ -91,7 +91,7 @@ const BasicLayout: React.FC<ProLayoutProps> = () => {
           <span {...animateProps}>{route.breadcrumbName}</span>
         );
       }}
-      menuItemRender={(item, dom) => {
+      menuItemRender={(item: any, dom: React.ReactNode) => {
         return item.isUrl ? (
           <a href={item.path} target="_blank" rel="noreferrer">
             {dom}
