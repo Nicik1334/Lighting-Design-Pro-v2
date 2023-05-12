@@ -46,6 +46,7 @@ div {
 
 .ant-layout-content {
   padding: 0 !important;
+  margin: 0;
 }
 
 canvas {
@@ -63,10 +64,15 @@ ol {
   list-style: none;
 }
 
+.ant-page-header:where(.css-dev-only-do-not-override-um50ig).ant-page-header {
+  background: white;
+}
+
 // 操作栏按钮样式
 .action_bar {
   .ant-btn {
     padding: 4px 6px;
+
     & > span + .anticon,
     & > .anticon + span {
       margin-left: 4px;

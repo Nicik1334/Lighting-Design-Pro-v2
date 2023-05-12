@@ -1,3 +1,4 @@
+import GlobalConfig from '@/global';
 import { ProLayoutProps } from '@ant-design/pro-components';
 export interface SettingsTypes {
   pwa?: boolean;
@@ -21,13 +22,13 @@ export interface SettingsTypes {
  */
 const Settings: ProLayoutProps & SettingsTypes = {
   colorPrimary: '#13C2C2',
-  layout: 'mix',
+  layout: 'top',
   contentWidth: 'Fluid',
-  fixedHeader: false,
+  fixedHeader: true,
   fixSiderbar: true,
-  colorWeak: false,
-  title: 'Ant Design Pro',
-  pwa: true,
+  colorWeak: true,
+  title: GlobalConfig.AppName,
+  pwa: false,
   logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
   iconfontUrl: '',
   token: {

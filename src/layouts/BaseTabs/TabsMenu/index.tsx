@@ -29,7 +29,8 @@ const TabBarStyle: CSSProperties = {
   zIndex: 1,
   padding: 0,
   width: '100%',
-  background: 'white',
+  backgroundColor: 'rgba(255, 255, 255, 0.6)',
+  backdropFilter: 'blur(8px)',
 };
 
 const DraggableTabNode = ({ index, children, moveNode }: DraggableTabPaneProps) => {
@@ -263,7 +264,7 @@ const TabsMenu: React.FC<TabsMenuProps> = ({
           </div>
         )}
         activeKey={location.pathname}
-        style={{ height: 58 }}
+        style={{ height: 48 }}
         type="editable-card"
         hideAdd
       />
