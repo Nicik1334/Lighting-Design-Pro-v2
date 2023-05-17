@@ -161,6 +161,23 @@ const routes = [
         ],
       },
       {
+        name: '个人页',
+        icon: 'PicRightOutlined',
+        path: '/account',
+        routes: [
+          {
+            path: '/account',
+            redirect: '/account/settings',
+          },
+          {
+            name: '个人设置',
+            icon: 'UserOutlined',
+            path: '/account/settings',
+            component: './account/settings',
+          },
+        ],
+      },
+      {
         name: '百度',
         icon: 'RedditOutlined',
         path: 'http://www.baidu.com',
