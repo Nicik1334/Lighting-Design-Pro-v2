@@ -21,8 +21,73 @@ interface ScarchProps {
 const SearchModal: FC<ScarchProps> = ({ isShow = true, onEnter }) => {
   const [value, setValue] = useState('');
   const { initialState } = useModel<any>('@@initialState');
-  const { currentUser } = initialState ?? {
-    currentUser: { routes: [] },
+  // const { currentUser } = initialState ?? {
+  //   currentUser: {
+  //     routes: [],
+  //   },
+  // };
+  const { currentUser } = {
+    currentUser: {
+      routes: [
+        {
+          menuCode: 'dashboard',
+          icon: 'CommentOutlined',
+          menuName: '首页',
+          menuUrl: '/dashboard',
+        },
+        {
+          menuName: '基础表单',
+          menuUrl: '/form/basic-form',
+          menuCode: 'basic-form',
+        },
+        {
+          menuName: '弹窗表单',
+          menuUrl: '/form/modal-form',
+          menuCode: 'modal-form',
+        },
+        {
+          menuName: '分步表单',
+          menuUrl: '/form/step-form',
+          menuCode: 'step-form',
+        },
+        {
+          menuName: '菜单管理',
+          icon: 'MenuFoldOutlined',
+          menuUrl: '/system/menu',
+          menuCode: 'menu',
+        },
+        {
+          menuName: '字典管理',
+          icon: 'TagsOutlined',
+          menuUrl: '/system/dictionary',
+          menuCode: 'dictionary',
+        },
+        {
+          menuName: '人员管理',
+          icon: 'TeamOutlined',
+          menuUrl: '/system/user',
+          menuCode: 'user',
+        },
+        {
+          menuName: '角色管理',
+          icon: 'UserSwitchOutlined',
+          menuUrl: '/system/role',
+          menuCode: 'role',
+        },
+        {
+          menuName: '组织管理',
+          icon: 'BranchesOutlined',
+          menuUrl: '/system/org',
+          menuCode: 'org',
+        },
+        {
+          menuName: '百度',
+          icon: 'RedditOutlined',
+          menuUrl: 'http://www.baidu.com',
+          menuCode: 'baidu',
+        },
+      ],
+    },
   };
 
   const [routeList, setRouteList] = useState<MenuType['nodeData'][]>([]);

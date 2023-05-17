@@ -2,20 +2,14 @@ import { FullscreenOutlined, HomeOutlined, ReloadOutlined, TagOutlined } from '@
 import Icon from '@ant-design/icons';
 import * as antIcons from '@ant-design/icons';
 import { useKeyPress } from 'ahooks';
-import type { TabsProps } from 'antd';
-import { Button, Tooltip } from 'antd';
-import { Dropdown, Space, Tabs } from 'antd';
-import React, { CSSProperties, useCallback, useContext, useRef, useState } from 'react';
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { matchPath, useModel, useNavigate } from '@umijs/max';
-import type { DraggableTabPaneProps, TabsMenuProps, TagsItemType } from './data';
+import { Button, Tooltip, Dropdown, Space, Tabs } from 'antd';
+import React, { CSSProperties, useContext, useRef, useState } from 'react';
+import { useModel, useNavigate } from '@umijs/max';
+import type { TabsMenuProps, TagsItemType } from './data';
 import styles from './index.less';
 import { BaseTabsContext } from '..';
 import { NOT_PATH, TABS_LIST } from '@/constants';
 import NotPage from '@/pages/404';
-
-const type = 'DraggableTabNode';
 
 const tabIconStyle: CSSProperties = {
   display: 'inline-block',
@@ -29,40 +23,10 @@ const TabBarStyle: CSSProperties = {
   zIndex: 1,
   padding: 0,
   width: '100%',
+  height: 48,
   backgroundColor: 'rgba(255, 255, 255, 0.6)',
   backdropFilter: 'blur(8px)',
 };
-
-const DraggableTabNode = ({ index, children, moveNode }: DraggableTabPaneProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [{ isOver, dropClassName }, drop] = useDrop({
-    accept: type,
-    collect: (monitor) => {
-      const { index: dragIndex } = monitor.getItem() || {};
-      if (dragIndex === index) return {};
-      return {
-        isOver: monitor.isOver(),
-        dropClassName: 'dropping',
-      };
-    },
-    drop: (item: { index: React.Key }) => moveNode(item.index, index),
-  });
-  const [{ isDragging }, drag] = useDrag({
-    type,
-    item: { index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-  drop(drag(ref));
-
-  return (
-    <div ref={ref} style={{ opacity: isDragging ? 0 : 1 }} className={isOver ? dropClassName : ''}>
-      {children}
-    </div>
-  );
-};
-
 const TabsMenu: React.FC<TabsMenuProps> = ({
   cacheKeyMap,
   tabList,
@@ -72,86 +36,33 @@ const TabsMenu: React.FC<TabsMenuProps> = ({
   refreshPage,
 }) => {
   const navigate = useNavigate();
-
   const { initialState } = useModel('@@initialState');
   const { handleRefreshPage } = useContext(BaseTabsContext);
-  const fullRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [isFull, setIsFull] = useState<boolean>(false);
   useKeyPress('ESC', () => setIsFull(false));
-
-  const DraggableTabs: React.FC<TabsProps> = useCallback(
-    (props: JSX.IntrinsicAttributes & TabsProps) => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const [order, setOrder] = useState<React.Key[]>([]);
-      const { items = [] } = props;
-      const moveTabNode = (dragKey: React.Key, hoverKey: React.Key) => {
-        const newOrder = order.slice();
-        items.forEach((item) => {
-          if (item.key && newOrder.indexOf(item.key) === -1) {
-            newOrder.push(item.key);
-          }
-        });
-        const dragIndex = newOrder.indexOf(dragKey); // 移动的标签位置
-        const hoverIndex = newOrder.indexOf(hoverKey); // 移动后标签位置
-        newOrder.splice(dragIndex, 1); // 删除移动前标签
-        newOrder.splice(hoverIndex, 0, dragKey); // 添加移动后标签
-        setOrder(newOrder);
-      };
-
-      const renderTabBar: TabsProps['renderTabBar'] = (tabBarProps, DefaultTabBar: any) => {
-        return (
-          <DefaultTabBar {...tabBarProps}>
-            {(node: any) => (
-              <DraggableTabNode key={node.key} index={node.key!} moveNode={moveTabNode}>
-                {node}
-              </DraggableTabNode>
-            )}
-          </DefaultTabBar>
-        );
-      };
-      const orderItems = [...items].sort((a, b) => {
-        const orderA = order.indexOf(a.key!);
-        const orderB = order.indexOf(b.key!);
-        if (orderA !== -1 && orderB !== -1) return orderA - orderB;
-        if (orderA !== -1) return -1;
-        if (orderB !== -1) return 1;
-        const ia = items.indexOf(a);
-        const ib = items.indexOf(b);
-        return ia - ib;
-      });
-      return (
-        <DndProvider backend={HTML5Backend}>
-          <Tabs renderTabBar={renderTabBar} {...props} items={orderItems} />
-        </DndProvider>
-      );
-    },
-    [],
-  );
-
-  // console.log('_');
+  const fullRef = useRef(null);
 
   return (
-    <div
-      className={`${styles.tags_wrapper} ${isFull ? styles.tabs_full : ''}`}
-      ref={fullRef}
-      style={{ background: isFull ? '#ffffff' : 'unset' }}
-    >
-      <DraggableTabs
+    <div className={`${styles.tags_wrapper} ${isFull ? styles.tabs_full : ''}`} ref={fullRef}>
+      <Tabs
         tabBarExtraContent={{
           right: (
             <Space style={{ marginRight: 24, display: 'flex', alignItems: 'center' }}>
               <Tooltip title="重新加载" placement="bottom">
-                <Button type="text" style={{ display: 'flex', alignItems: 'center' }}>
+                <Button
+                  type="text"
+                  style={{ display: 'flex', alignItems: 'center' }}
+                  onClick={() => {
+                    if (!loading) {
+                      setLoading(true);
+                      handleRefreshPage();
+                      setTimeout(() => setLoading(false), 1000);
+                    }
+                  }}
+                >
                   <ReloadOutlined
                     spin={loading}
-                    onClick={() => {
-                      if (!loading) {
-                        setLoading(true);
-                        handleRefreshPage();
-                        setTimeout(() => setLoading(false), 1000);
-                      }
-                    }}
                     style={{ fontSize: 18, fontWeight: 800, cursor: 'pointer' }}
                   />
                 </Button>
@@ -168,6 +79,8 @@ const TabsMenu: React.FC<TabsMenuProps> = ({
           }
         }}
         onChange={(key: string) => {
+          if (!key) return;
+          key = key.split(':')[0];
           const tabItem = (
             JSON.parse(sessionStorage.getItem(TABS_LIST) || '[]') as TagsItemType[]
           ).find((o) => o.path === key);
@@ -242,10 +155,10 @@ const TabsMenu: React.FC<TabsMenuProps> = ({
                     {initialState?.settings?.tabView &&
                       initialState?.settings?.tabView?.tabIcon && (
                         <div style={{ ...tabIconStyle, width: item.active && item.icon ? 20 : 0 }}>
-                          {typeof item.icon === 'string' ? (
+                          {item.icon && typeof item.icon === 'string' ? (
                             <Icon component={antIcons[item.icon]} />
                           ) : (
-                            item.icon
+                            item.icon || <></>
                           )}
                         </div>
                       )}
@@ -255,39 +168,24 @@ const TabsMenu: React.FC<TabsMenuProps> = ({
                 </Dropdown>
               </div>
             ),
-            key: item.path,
+            children: (
+              <div className="keep-alive-layout animate__animated animate__fadeIn">
+                {item.path === NOT_PATH ? <NotPage /> : item.children}
+              </div>
+            ),
+            key: `${item.path}:${cacheKeyMap[`${item.path}`] || '_'}`,
           };
         })}
         renderTabBar={(props, DefaultTabBar: any) => (
-          <div style={TabBarStyle}>
+          <div style={TabBarStyle} className={styles.tabs_hander}>
             <DefaultTabBar {...props} style={{ marginBottom: 0 }} />
           </div>
         )}
-        activeKey={location.pathname}
-        style={{ height: 48 }}
+        activeKey={`${location.pathname}:${cacheKeyMap[`${location.pathname}`] || '_'}`}
+        style={{ height: 'fit-content' }}
         type="editable-card"
         hideAdd
       />
-
-      {tabList.map((item) => (
-        <div
-          className="keep-alive-layout"
-          key={`${item.path}:${cacheKeyMap[`${item.path}`] || '_'}`}
-          hidden={!matchPath(location.pathname, item.path as string)}
-        >
-          <div
-            className="animate__animated animate__fadeIn"
-            style={{
-              height: '100%',
-              width: '100%',
-              position: 'relative',
-              overflow: 'hidden auto',
-            }}
-          >
-            {item.path === NOT_PATH ? <NotPage /> : item.children}
-          </div>
-        </div>
-      ))}
     </div>
   );
 };

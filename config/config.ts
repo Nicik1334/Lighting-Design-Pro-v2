@@ -6,8 +6,6 @@ import { theme } from 'antd';
 
 const { REACT_APP_ENV = 'dev' } = process.env;
 
-const { defaultAlgorithm, defaultSeed } = theme;
-const mapToken = defaultAlgorithm(defaultSeed);
 export default defineConfig({
   hash: true,
   targets: {},
@@ -26,7 +24,10 @@ export default defineConfig({
   model: {},
   initialState: {},
   lessLoader: {
-    modifyVars: mapToken,
+    modifyVars: {
+      // 注入全局定义variables
+      hack: 'true; @import "@/styles/variables.less";',
+    },
   },
   moment2dayjs: {
     preset: 'antd',
