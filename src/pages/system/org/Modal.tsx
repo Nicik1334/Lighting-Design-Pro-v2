@@ -1,4 +1,4 @@
-import TreeSlider from '@/components/common/TreeSlider';
+import TreeSlider from '@/components/business/TreeSlider';
 import { awaitTime } from '@/utils';
 import { useRequest } from 'ahooks';
 import { Row, Col } from 'antd';

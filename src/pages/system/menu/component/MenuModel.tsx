@@ -1,5 +1,5 @@
-import TreeSlider from '@/components/common/TreeSlider';
-import IconModal, { IconFont } from '@/components/system/IconModal';
+import TreeSlider from '@/components/business/TreeSlider';
+import IconModal, { IconFont } from '@/components/business/IconModal';
 import { awaitTime } from '@/utils';
 import Icon, * as antIcons from '@ant-design/icons';
 import { useRequest } from 'ahooks';

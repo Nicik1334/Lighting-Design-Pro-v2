@@ -12,7 +12,7 @@ import { OrgController } from './server';
 import type { DataNode } from 'antd/lib/tree';
 import { awaitTime } from '@/utils';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import PopSwitchState from '@/components/system/PopSwitchState';
+import PopSwitchState from '@/components/business/PopSwitchState';
 
 const onFormat = (nodes: any[]): DataNode[] => {
   nodes.forEach((res) => {

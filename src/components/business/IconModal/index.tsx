@@ -24,8 +24,8 @@ const defaultIcon = {
 };
 
 export const IconFont = createFromIconfontCN({
-  scriptUrl: '/fontIcon.js', // 离线版
-  // scriptUrl: '//at.alicdn.com/t/c/font_3950463_4e8682pkb7.js', // 在线版
+  // scriptUrl: '/fontIcon.js', // 离线版
+  scriptUrl: '//at.alicdn.com/t/c/font_3950463_4e8682pkb7.js', // 在线版
 });
 const Index: FC<IconModalProps> = ({ onChange, cancel, open, ...restProps }) => {
   const [activeKey, setActiveKey] = useState('Outlined');
@@ -128,7 +128,7 @@ const Index: FC<IconModalProps> = ({ onChange, cancel, open, ...restProps }) => 
               children: IconListDom(twoToneList, 'TwoTone'),
             },
             {
-              label: `DIY风格（需外网）`,
+              label: `DIY风格`,
               key: 'DIY',
               children: IconListDom(DIYList, 'DIY'),
             },

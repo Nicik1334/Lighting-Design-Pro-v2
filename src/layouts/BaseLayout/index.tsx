@@ -1,4 +1,4 @@
-import RightContent from '@/components/system/RightContent';
+import RightContent from '@/components/business/RightContent';
 import { MenuDataItem, ProLayoutProps } from '@ant-design/pro-components';
 import { ProLayout } from '@ant-design/pro-components';
 import { ConfigProvider } from 'antd';
@@ -91,7 +91,11 @@ const BasicLayout: React.FC<ProLayoutProps> = () => {
                   JSON.parse(sessionStorage.getItem(TABS_LIST) || '[]') as TagsItemType[]
                 ).find((o) => o.path === item.path);
                 const search = (tabItem?.location?.search as Location) || '';
-                search ? navigate(`${item.path}${search}`) : navigate(item.path || HOME_PATH);
+                if (search) {
+                  navigate(`${item.path}${search}`);
+                } else {
+                  navigate(item.path || HOME_PATH);
+                }
                 setPathname(item.path || HOME_PATH);
               }}
             >

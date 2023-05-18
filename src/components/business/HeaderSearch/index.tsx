@@ -3,7 +3,7 @@ import { useKeyPress } from 'ahooks';
 import { Tooltip } from 'antd';
 import { useState } from 'react';
 import { history } from '@umijs/max';
-import SearchModal from '../SearchModal';
+import SearchModal from '../../business/SearchModal';
 
 const HeaderSearch = ({ className }: { className: string }) => {
   const [isShow, setIsShow] = useState(false);

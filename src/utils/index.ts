@@ -257,22 +257,6 @@ const getImgBase64Url = (file: File) => {
 };
 
 /**
- * 自定义hook 用于获取当前路由locusPage信息,与机房信息
- * @param pathname 当前路由pathname
- * @returns
- */
-
-function usechangeLocation(pathname: string, callBack: (location: any) => void) {
-  const unlisten = history.listen(async (location) => {
-    // 指定路由
-    if (location.pathname === pathname) {
-      callBack(location);
-    }
-  });
-  return unlisten;
-}
-
-/**
  * 铺平按钮权限
  * @param authList
  * @param type  `Menu`,`Buttom`
@@ -353,7 +337,6 @@ export {
   showNotification,
   formatDate,
   getImgBase64Url,
-  usechangeLocation,
   awaitTime,
   onTreeNodes,
   onRoundRoutes,

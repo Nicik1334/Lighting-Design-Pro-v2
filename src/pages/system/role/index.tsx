@@ -1,6 +1,5 @@
 import type { FormInstance } from 'antd';
-import { Popconfirm, Space, Switch, Button } from 'antd';
-import type { FC } from 'react';
+import { Popconfirm, Space, Button } from 'antd';
 import { useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
 import type { ColumnsType } from 'antd/lib/table';
@@ -12,10 +11,9 @@ import { awaitTime } from '@/utils';
 import { ProCard } from '@ant-design/pro-components';
 import { getPageRole } from './server';
 import { DeleteOutlined, EditOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import PopSwitchState from '@/components/system/PopSwitchState';
+import PopSwitchState from '@/components/business/PopSwitchState';
 
-interface RoleProps {}
-const Role: FC<RoleProps> = () => {
+const Role = () => {
   const formRef = useRef<FormInstance>();
   const tableRef = useRef<LTableInstance>();
   const [open, setOpen] = useState<boolean>(false);

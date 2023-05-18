@@ -12,7 +12,7 @@ import type { FC } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import styles from './index.less';
 import { useModel } from '@umijs/max';
-import { IconFont } from '../IconModal';
+import { IconFont } from '../../business/IconModal';
 
 interface ScarchProps {
   isShow: boolean;
