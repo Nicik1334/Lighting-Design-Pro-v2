@@ -19,7 +19,7 @@ const routes = [
       {
         name: '登录',
         path: '/user/login',
-        component: './User/Login',
+        component: './user/Login',
       },
       {
         path: '*',
