@@ -1,4 +1,4 @@
-import { USER_TOKEN } from '@/constants';
+import { LOGIN_PATH, USER_TOKEN } from '@/constants';
 import {
   CopyOutlined,
   LogoutOutlined,
@@ -94,7 +94,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
               content: '确定注销当前登录状态？',
               onOk() {
                 setInitialState((s) => ({ ...s, currentUser: undefined }));
-                dispatch({ type: 'authModel/logout' });
+                history.replace(LOGIN_PATH);
               },
             })
           }
