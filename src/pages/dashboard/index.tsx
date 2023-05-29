@@ -7,6 +7,7 @@ import { useRafInterval } from 'ahooks';
 import { BaseTabsContext } from '@/layouts/BaseTabs';
 import { Button, Space, theme, Tooltip } from 'antd';
 import { history, request } from '@umijs/max';
+import Hamster from '@/components/common/Hamster';
 
 const Dashboard: React.FC = () => {
   const [value, setValue] = useState<string>(dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'));
@@ -18,34 +19,31 @@ const Dashboard: React.FC = () => {
     useContext(BaseTabsContext);
   const { useToken } = theme;
 
-  const fetchTest = async () => {
-    const result = await request('http://localhost:3000/system/getMenuItem', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    console.log(result);
-  };
-
   const { token } = useToken();
   return (
     <PageContainer>
       <ProCard
         style={{
           backgroundColor: token.colorBgContainer,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
       >
+        <Hamster />
+        <LNumberRoll type="date" className={styles.numberStyle} value={value} />
+        <LTypeit
+          className={styles.typeit}
+          options={{
+            cursor: false,
+            speed: 60,
+            waitUntilVisible: true,
+          }}
+          getBeforeInit={(instance) => {
+            return instance.type('时间就像奔跑的仓鼠，它总是不知疲倦地奔跑，永不停息。');
+          }}
+        />
         <Space>
-          <Tooltip title="/">
-            <Button
-              onClick={() => {
-                fetchTest();
-              }}
-            >
-              调用接口
-            </Button>
-          </Tooltip>
           <Tooltip title="/">
             <Button onClick={() => history.push('/')}>刷新系统</Button>
           </Tooltip>
@@ -94,19 +92,6 @@ const Dashboard: React.FC = () => {
             关闭所有页面
           </Button>
         </Space>
-
-        <LNumberRoll type="date" className={styles.numberStyle} value={value} />
-        <LTypeit
-          className={styles.typeit}
-          options={{
-            cursor: false,
-            speed: 60,
-            waitUntilVisible: true,
-          }}
-          getBeforeInit={(instance) => {
-            return instance.type('时间就像奔跑的仓鼠，它总是不知疲倦地奔跑，永不停息。');
-          }}
-        />
       </ProCard>
     </PageContainer>
   );

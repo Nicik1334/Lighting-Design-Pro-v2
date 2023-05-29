@@ -103,7 +103,7 @@ const BaseTabs: React.FC<BaseTabsProps> = memo(({ home }) => {
           icon:
             typeof item.icon === 'string'
               ? item.icon
-              : item.icon?.props.component.render.name || item.icon,
+              : item.icon?.props.component.render.displayName || item.icon,
         };
       });
       sessionStorage.setItem(TABS_LIST, JSON.stringify(tagsList.filter((item) => item)));
