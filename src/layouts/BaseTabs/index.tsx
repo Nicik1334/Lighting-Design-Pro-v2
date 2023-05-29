@@ -59,6 +59,7 @@ const BaseTabs: React.FC<BaseTabsProps> = memo(({ home }) => {
   // const access = useAccess();
   const navigate = useNavigate();
   const location = useLocation();
+
   const element = useOutlet();
   const { initialState } = useModel('@@initialState');
   const [tabList, setTabList] = useState<TagsItemType[]>(() => {

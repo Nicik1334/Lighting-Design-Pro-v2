@@ -6,7 +6,7 @@ import styles from './index.less';
 import { useRafInterval } from 'ahooks';
 import { BaseTabsContext } from '@/layouts/BaseTabs';
 import { Button, Space, theme, Tooltip } from 'antd';
-import { history } from '@umijs/max';
+import { history, request } from '@umijs/max';
 
 const Dashboard: React.FC = () => {
   const [value, setValue] = useState<string>(dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'));
@@ -18,6 +18,16 @@ const Dashboard: React.FC = () => {
     useContext(BaseTabsContext);
   const { useToken } = theme;
 
+  const fetchTest = async () => {
+    const result = await request('http://localhost:3000/system/getMenuItem', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    console.log(result);
+  };
+
   const { token } = useToken();
   return (
     <PageContainer>
@@ -27,6 +37,15 @@ const Dashboard: React.FC = () => {
         }}
       >
         <Space>
+          <Tooltip title="/">
+            <Button
+              onClick={() => {
+                fetchTest();
+              }}
+            >
+              调用接口
+            </Button>
+          </Tooltip>
           <Tooltip title="/">
             <Button onClick={() => history.push('/')}>刷新系统</Button>
           </Tooltip>

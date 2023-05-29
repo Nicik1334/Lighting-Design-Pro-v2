@@ -1,7 +1,7 @@
 import RightContent from '@/components/business/RightContent';
 import { MenuDataItem, ProLayoutProps } from '@ant-design/pro-components';
 import { ProLayout } from '@ant-design/pro-components';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, theme } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Icon from '@ant-design/icons';
 import * as antIcons from '@ant-design/icons';

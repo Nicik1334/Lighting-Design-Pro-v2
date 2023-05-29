@@ -3,7 +3,7 @@ import { getDvaApp, RequestConfig } from '@umijs/max';
 import { message } from 'antd';
 import _ from 'lodash';
 import NProgress from './components/common/NProgress';
-import { CODE_MESSAGE, USER_TOKEN } from './constants';
+import { CODE_MESSAGE, Request_URL, USER_TOKEN } from './constants';
 import { showNotification } from './utils';
 
 const logout = _.throttle(
@@ -39,6 +39,7 @@ export const errorConfig: RequestConfig = {
       // 拦截请求配置，进行个性化处理。
       NProgress.start();
       const { headers, url } = config;
+      config.baseURL = Request_URL; // 前端和后端node不是一个端口，则重新定义url
       config.headers = {
         ...headers,
         ticket: sessionStorage.getItem(USER_TOKEN) as string,

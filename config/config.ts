@@ -10,6 +10,7 @@ const { defaultAlgorithm, defaultSeed } = theme;
 const mapToken = defaultAlgorithm(defaultSeed);
 export default defineConfig({
   hash: true,
+  // history: { type: 'hash' },
   targets: {},
   routes,
   theme: {

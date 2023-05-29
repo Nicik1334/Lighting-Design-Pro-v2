@@ -1,5 +1,3 @@
-import { login } from '@/services/ant-design-pro/api';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
   AlipayCircleOutlined,
   LockOutlined,
@@ -20,6 +18,7 @@ import { Alert, message, Tabs } from 'antd';
 import Settings from '../../../../config/defaultSettings';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
+import { login } from '@/pages/User/Login/server';
 
 const ActionIcons = () => {
   const langClassName = useEmotionCss(({ token }) => {
@@ -237,12 +236,6 @@ const Login: React.FC = () => {
                   },
                 ]}
                 onGetCaptcha={async (phone) => {
-                  const result = await getFakeCaptcha({
-                    phone,
-                  });
-                  if (!result) {
-                    return;
-                  }
                   message.success('获取验证码成功！验证码为：1234');
                 }}
               />

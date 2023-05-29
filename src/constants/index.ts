@@ -1,4 +1,6 @@
-export const BASE_URL = 'http://219.152.92.104:10010/' as const; // 开发环境地址
+// export const BASE_URL = 'http://219.152.92.104:10010/' as const; // 开发环境地址
+export const BASE_URL = 'http://47.108.59.217:5555/' as const; // 开发环境地址
+export const Request_URL = 'http://47.108.59.217:3000/' as const; // node接口地址
 
 export const USER_TOKEN = `USER_TOKEN`;
 

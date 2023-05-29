@@ -19,14 +19,13 @@ import React from 'react';
 import style from './style.less';
 import loginBg from '@/assets/imgs/login/loginBg.png';
 import loginBoxBg from '@/assets/imgs/login/loginBoxBg.png';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import { useModel, history } from '@umijs/max';
 import logo from '@/assets/icons/logo1.svg';
 import { useRequest } from 'ahooks';
-import { login } from '@/services/ant-design-pro/api';
 import { getPageQuery } from '@/utils';
 import { USER_TOKEN } from '@/constants';
 import { AUTHURL, ROUTES } from './mock';
+import { login } from './server';
 
 const iconStyles: CSSProperties = {
   marginInlineStart: '16px',
@@ -155,11 +154,7 @@ const Login = () => {
         onGetCaptcha={async () => {
           await form.validateFields(['phone']);
           const phone = form.getFieldValue('phone');
-          return await getFakeCaptcha({
-            phone,
-          }).then(() => {
-            message.success('获取验证码成功！验证码为：1234');
-          });
+          message.success('获取验证码成功！验证码为：1234');
         }}
         placeholder="请输入验证码"
         cacheKey="LOGIN_FROM"

@@ -3,8 +3,8 @@ import { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { Spin } from 'antd';
 import defaultSettings, { SettingsTypes } from '../config/defaultSettings';
+import { currentUser } from './pages/User/Login/server';
 import { errorConfig } from './requestErrorConfig';
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 const loginPath = '/user/login';
 
 export async function getInitialState(): Promise<{
@@ -16,9 +16,7 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser({
-        skipErrorHandler: true,
-      });
+      const msg = await currentUser({});
       return msg.data;
     } catch (error) {
       history.push(loginPath);
